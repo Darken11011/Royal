@@ -428,6 +428,45 @@
             h1 { font-size: 1.8em; }
             .mic-button { width: 100px; height: 100px; font-size: 2.5em; }
         }
+
+        /* Speed Slider Styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.7);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -470,6 +509,18 @@
             <strong>Tap the microphone</strong> to start speaking<br>
             The AI will respond in real-time with natural voice
         </div>
+
+        <!-- Speech Speed Control -->
+        <div style="margin-top: 20px; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 16px; backdrop-filter: blur(10px);">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <label for="speedSlider" style="font-weight: 600; color: var(--text-secondary); font-size: 0.95em;">🎚️ Voice Speed:</label>
+                <input type="range" id="speedSlider" min="0.5" max="2.0" step="0.1" value="1.0"
+                       oninput="updateSpeechRate(this.value)"
+                       style="width: 200px; height: 6px; border-radius: 5px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); outline: none; cursor: pointer;">
+                <span id="speedLabel" style="font-weight: 700; color: var(--accent-color); min-width: 140px; text-align: left; font-size: 0.95em;">Speed: Normal (1.0x)</span>
+            </div>
+        </div>
+    </div>
     </div>
     <script src="app.js"></script>
 </body>
