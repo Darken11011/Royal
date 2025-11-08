@@ -10,6 +10,7 @@ let audioChunks = [];
 let isSpeaking = false;
 let recognition = null;
 let currentTranscript = '';
+let audioEnabled = false; // Track if user has enabled audio
 
 const SILENCE_THRESHOLD = 0.01;
 const SILENCE_DURATION = 1500; // 1.5 seconds of silence triggers processing
@@ -190,6 +191,17 @@ async function toggleMicrophone() {
 
 async function startRecording() {
     try {
+        // Enable audio on user interaction (fixes autoplay policy)
+        if (!audioEnabled) {
+            console.log('Enabling audio on user interaction...');
+            audioEnabled = true;
+            // Prime the speech synthesis by speaking silence
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance('');
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
         // Request microphone access
         audioStream = await navigator.mediaDevices.getUserMedia({
             audio: {
@@ -476,6 +488,12 @@ function speakTextAsync(text) {
             return;
         }
 
+        // Enable audio on first speech attempt (user gesture)
+        if (!audioEnabled) {
+            console.log('Enabling audio context on first speech...');
+            audioEnabled = true;
+        }
+
         console.log('Speaking text:', text.substring(0, 50) + '...');
 
         // Cancel any ongoing speech
@@ -561,7 +579,14 @@ function speakText(text) {
 // Test TTS function
 function testTTS() {
     console.log('Testing TTS...');
+    audioEnabled = true; // Enable audio on button click
     addMessage('system', 'Testing audio output...');
+
+    // Prime speech synthesis
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+    }
+
     speakTextAsync('Hello! This is a test of the text to speech system. If you can hear this, audio is working correctly.')
         .then(() => {
             console.log('TTS test completed');
