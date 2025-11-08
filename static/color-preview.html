@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette Options</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            background: #1a1a1a;
+            color: white;
+        }
+        h1 { margin-bottom: 40px; text-align: center; }
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .palette-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .palette-card:hover {
+            transform: translateY(-5px);
+        }
+        .palette-preview {
+            height: 250px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .palette-info {
+            background: #2a2a2a;
+            padding: 20px;
+        }
+        .palette-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .palette-desc {
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+        .color-swatches {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .swatch {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .preview-content {
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            color: #333;
+        }
+        .preview-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        
+        /* Palette 1: Ocean Blue */
+        .ocean { background: linear-gradient(135deg, #0077be 0%, #00a8e8 50%, #00d4ff 100%); }
+        
+        /* Palette 2: Sunset Orange */
+        .sunset { background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffd23f 100%); }
+        
+        /* Palette 3: Forest Green */
+        .forest { background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 50%, #52b788 100%); }
+        
+        /* Palette 4: Midnight Dark */
+        .midnight { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        
+        /* Palette 5: Rose Pink */
+        .rose { background: linear-gradient(135deg, #e63946 0%, #f72585 50%, #b5179e 100%); }
+        
+        /* Palette 6: Cyber Neon */
+        .cyber { background: linear-gradient(135deg, #00f5ff 0%, #7b2cbf 50%, #ff006e 100%); }
+        
+        /* Palette 7: Warm Autumn */
+        .autumn { background: linear-gradient(135deg, #d62828 0%, #f77f00 50%, #fcbf49 100%); }
+        
+        /* Palette 8: Cool Mint */
+        .mint { background: linear-gradient(135deg, #06ffa5 0%, #00d9ff 50%, #4d9de0 100%); }
+        
+        /* Palette 9: Royal Purple */
+        .royal { background: linear-gradient(135deg, #5a189a 0%, #7209b7 50%, #9d4edd 100%); }
+        
+        /* Palette 10: Monochrome */
+        .mono { background: linear-gradient(135deg, #2b2d42 0%, #8d99ae 50%, #edf2f4 100%); }
+        
+        /* Palette 11: Tropical */
+        .tropical { background: linear-gradient(135deg, #06ffa5 0%, #fffb00 50%, #ff006e 100%); }
+        
+        /* Palette 12: Deep Space */
+        .space { background: linear-gradient(135deg, #240046 0%, #3c096c 50%, #5a189a 100%); }
+    </style>
+</head>
+<body>
+    <h1>🎨 Choose Your Color Palette</h1>
+    <div class="palette-grid">
+        
+        <div class="palette-card" onclick="selectPalette('ocean')">
+            <div class="palette-preview ocean">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #0077be, #00d4ff);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">1. Ocean Blue</div>
+                <div class="palette-desc">Professional, calm, trustworthy</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #0077be;"></div>
+                    <div class="swatch" style="background: #00a8e8;"></div>
+                    <div class="swatch" style="background: #00d4ff;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('sunset')">
+            <div class="palette-preview sunset">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #ff6b35, #ffd23f);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">2. Sunset Orange</div>
+                <div class="palette-desc">Energetic, warm, creative</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #ff6b35;"></div>
+                    <div class="swatch" style="background: #f7931e;"></div>
+                    <div class="swatch" style="background: #ffd23f;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('forest')">
+            <div class="palette-preview forest">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #2d6a4f, #52b788);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">3. Forest Green</div>
+                <div class="palette-desc">Natural, balanced, growth</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #1b4332;"></div>
+                    <div class="swatch" style="background: #2d6a4f;"></div>
+                    <div class="swatch" style="background: #52b788;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('midnight')">
+            <div class="palette-preview midnight">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #16213e, #0f3460);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">4. Midnight Dark</div>
+                <div class="palette-desc">Sleek, modern, sophisticated</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #1a1a2e;"></div>
+                    <div class="swatch" style="background: #16213e;"></div>
+                    <div class="swatch" style="background: #0f3460;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('rose')">
+            <div class="palette-preview rose">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #e63946, #b5179e);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">5. Rose Pink</div>
+                <div class="palette-desc">Bold, passionate, vibrant</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #e63946;"></div>
+                    <div class="swatch" style="background: #f72585;"></div>
+                    <div class="swatch" style="background: #b5179e;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('cyber')">
+            <div class="palette-preview cyber">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #00f5ff, #ff006e);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">6. Cyber Neon</div>
+                <div class="palette-desc">Futuristic, tech, electric</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #00f5ff;"></div>
+                    <div class="swatch" style="background: #7b2cbf;"></div>
+                    <div class="swatch" style="background: #ff006e;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('autumn')">
+            <div class="palette-preview autumn">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #d62828, #fcbf49);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">7. Warm Autumn</div>
+                <div class="palette-desc">Cozy, inviting, friendly</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #d62828;"></div>
+                    <div class="swatch" style="background: #f77f00;"></div>
+                    <div class="swatch" style="background: #fcbf49;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('mint')">
+            <div class="palette-preview mint">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #06ffa5, #4d9de0);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">8. Cool Mint</div>
+                <div class="palette-desc">Fresh, clean, modern</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #06ffa5;"></div>
+                    <div class="swatch" style="background: #00d9ff;"></div>
+                    <div class="swatch" style="background: #4d9de0;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('royal')">
+            <div class="palette-preview royal">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #5a189a, #9d4edd);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">9. Royal Purple</div>
+                <div class="palette-desc">Luxurious, elegant, premium</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #5a189a;"></div>
+                    <div class="swatch" style="background: #7209b7;"></div>
+                    <div class="swatch" style="background: #9d4edd;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('mono')">
+            <div class="palette-preview mono">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #2b2d42, #8d99ae);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">10. Monochrome</div>
+                <div class="palette-desc">Minimal, classic, timeless</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #2b2d42;"></div>
+                    <div class="swatch" style="background: #8d99ae;"></div>
+                    <div class="swatch" style="background: #edf2f4;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('tropical')">
+            <div class="palette-preview tropical">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #06ffa5, #ff006e);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">11. Tropical</div>
+                <div class="palette-desc">Fun, playful, vibrant</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #06ffa5;"></div>
+                    <div class="swatch" style="background: #fffb00;"></div>
+                    <div class="swatch" style="background: #ff006e;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-card" onclick="selectPalette('space')">
+            <div class="palette-preview space">
+                <div class="preview-content">
+                    <div style="font-size: 1.5em; font-weight: bold;">Voice AI</div>
+                    <button class="preview-button" style="background: linear-gradient(135deg, #240046, #5a189a);">🎤</button>
+                </div>
+            </div>
+            <div class="palette-info">
+                <div class="palette-name">12. Deep Space</div>
+                <div class="palette-desc">Mysterious, deep, cosmic</div>
+                <div class="color-swatches">
+                    <div class="swatch" style="background: #240046;"></div>
+                    <div class="swatch" style="background: #3c096c;"></div>
+                    <div class="swatch" style="background: #5a189a;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function selectPalette(name) {
+            alert('You selected: ' + name.toUpperCase() + '\n\nTell me the number or name of the palette you want to apply!');
+        }
+    </script>
+</body>
+</html>
+
