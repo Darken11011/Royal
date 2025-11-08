@@ -82,8 +82,14 @@ window.addEventListener('load', () => {
 
 function connectWebSocket() {
     updateStatus('connecting', 'Connecting...');
-    
-    ws = new WebSocket(`ws://localhost:8000/ws/voice/${clientId}`);
+
+    // Dynamically determine WebSocket URL based on current location
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const host = window.location.host; // includes hostname and port
+    const wsUrl = `${protocol}//${host}/ws/voice/${clientId}`;
+
+    console.log('Connecting to WebSocket:', wsUrl);
+    ws = new WebSocket(wsUrl);
     
     ws.onopen = () => {
         updateStatus('ready', 'Ready - Tap to Talk');
