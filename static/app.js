@@ -470,75 +470,107 @@ async function playAudioResponse(base64Audio, audioFormat = 'wav') {
 function speakTextAsync(text) {
     return new Promise((resolve, reject) => {
         if (!('speechSynthesis' in window)) {
+            console.error('Speech synthesis not supported in this browser');
+            addMessage('system', 'Text-to-speech not supported in this browser');
             resolve();
             return;
         }
 
+        console.log('Speaking text:', text.substring(0, 50) + '...');
+
         // Cancel any ongoing speech
         window.speechSynthesis.cancel();
 
-        const utterance = new SpeechSynthesisUtterance(text);
+        // Small delay to ensure cancel completes
+        setTimeout(() => {
+            const utterance = new SpeechSynthesisUtterance(text);
 
-        // Get available voices and select a natural-sounding one
-        const voices = window.speechSynthesis.getVoices();
+            // Get available voices and select a natural-sounding one
+            const voices = window.speechSynthesis.getVoices();
+            console.log('Available voices count:', voices.length);
 
-        // Prefer natural-sounding voices (Google, Microsoft Neural, etc.)
-        const preferredVoices = [
-            'Google US English',
-            'Microsoft Aria Online (Natural) - English (United States)',
-            'Microsoft Jenny Online (Natural) - English (United States)',
-            'Samantha',  // macOS
-            'Google UK English Female',
-            'Microsoft Zira Desktop - English (United States)'
-        ];
+            // Prefer natural-sounding voices (Google, Microsoft Neural, etc.)
+            const preferredVoices = [
+                'Google US English',
+                'Microsoft Aria Online (Natural) - English (United States)',
+                'Microsoft Jenny Online (Natural) - English (United States)',
+                'Samantha',  // macOS
+                'Google UK English Female',
+                'Microsoft Zira Desktop - English (United States)'
+            ];
 
-        // Find the best available voice
-        let selectedVoice = null;
-        for (const preferred of preferredVoices) {
-            selectedVoice = voices.find(voice => voice.name === preferred);
-            if (selectedVoice) break;
-        }
-
-        // Fallback to any English female voice
-        if (!selectedVoice) {
-            selectedVoice = voices.find(voice =>
-                voice.lang.startsWith('en') && voice.name.toLowerCase().includes('female')
-            );
-        }
-
-        // Final fallback to any English voice
-        if (!selectedVoice) {
-            selectedVoice = voices.find(voice => voice.lang.startsWith('en'));
-        }
-
-        if (selectedVoice) {
-            utterance.voice = selectedVoice;
-            console.log('Using voice:', selectedVoice.name);
-        }
-
-        // Natural speech settings
-        utterance.rate = 1.1;      // Slightly faster for natural conversation
-        utterance.pitch = 1.0;     // Normal pitch
-        utterance.volume = 0.9;    // Slightly softer for comfort
-
-        utterance.onend = () => {
-            resolve();
-        };
-
-        utterance.onerror = (event) => {
-            // Only log non-interrupted errors
-            if (event.error !== 'interrupted') {
-                console.error('Speech synthesis error:', event);
+            // Find the best available voice
+            let selectedVoice = null;
+            for (const preferred of preferredVoices) {
+                selectedVoice = voices.find(voice => voice.name === preferred);
+                if (selectedVoice) break;
             }
-            resolve();  // Resolve anyway to continue flow
-        };
 
-        window.speechSynthesis.speak(utterance);
+            // Fallback to any English female voice
+            if (!selectedVoice) {
+                selectedVoice = voices.find(voice =>
+                    voice.lang.startsWith('en') && voice.name.toLowerCase().includes('female')
+                );
+            }
+
+            // Final fallback to any English voice
+            if (!selectedVoice) {
+                selectedVoice = voices.find(voice => voice.lang.startsWith('en'));
+            }
+
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                console.log('Using voice:', selectedVoice.name);
+            } else {
+                console.warn('No voice selected, using default');
+            }
+
+            // Natural speech settings
+            utterance.rate = 1.1;      // Slightly faster for natural conversation
+            utterance.pitch = 1.0;     // Normal pitch
+            utterance.volume = 1.0;    // Full volume
+
+            utterance.onstart = () => {
+                console.log('Speech started');
+            };
+
+            utterance.onend = () => {
+                console.log('Speech ended');
+                resolve();
+            };
+
+            utterance.onerror = (event) => {
+                console.error('Speech synthesis error:', event.error, event);
+                // Show error to user
+                if (event.error !== 'interrupted' && event.error !== 'canceled') {
+                    addMessage('system', `TTS Error: ${event.error}. Check browser console.`);
+                }
+                resolve();  // Resolve anyway to continue flow
+            };
+
+            console.log('Starting speech synthesis...');
+            window.speechSynthesis.speak(utterance);
+        }, 100);
     });
 }
 
 function speakText(text) {
     speakTextAsync(text);
+}
+
+// Test TTS function
+function testTTS() {
+    console.log('Testing TTS...');
+    addMessage('system', 'Testing audio output...');
+    speakTextAsync('Hello! This is a test of the text to speech system. If you can hear this, audio is working correctly.')
+        .then(() => {
+            console.log('TTS test completed');
+            addMessage('system', 'Audio test completed. Did you hear the voice?');
+        })
+        .catch(err => {
+            console.error('TTS test failed:', err);
+            addMessage('system', 'Audio test failed. Check console for details.');
+        });
 }
 
 // Load voices when they become available
