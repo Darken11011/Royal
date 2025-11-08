@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice AI Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 60px; height: 60px; top: 70%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 100px; height: 100px; top: 40%; left: 70%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 50px; height: 50px; top: 80%; left: 20%; animation-delay: 6s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
+            50% { transform: translateY(-30px) translateX(30px) scale(1.1); opacity: 0.6; }
+        }
+        
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            box-shadow: var(--shadow-xl);
+            max-width: 900px;
+            width: 100%;
+            padding: 48px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .logo-icon {
+            font-size: 36px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        
+        h1 {
+            font-size: 2.75em;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .status-container {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        .status.connecting { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); color: #1976d2; }
+        .status.connecting::before { background: #1976d2; }
+        
+        .status.ready { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); color: #2e7d32; }
+        .status.ready::before { background: #2e7d32; }
+        
+        .status.listening { 
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); 
+            color: #e65100;
+            animation: statusGlow 1.5s ease-in-out infinite;
+        }
+        .status.listening::before { background: #e65100; animation: statusPulse 0.8s ease-in-out infinite; }
+        
+        @keyframes statusGlow {
+            0%, 100% { box-shadow: 0 4px 12px rgba(230, 81, 0, 0.2); }
+            50% { box-shadow: 0 4px 24px rgba(230, 81, 0, 0.4); }
+        }
+        
+        .status.processing { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); color: #6a1b9a; }
+        .status.processing::before { background: #6a1b9a; }
+        
+        .status.speaking { background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%); color: #01579b; }
+        .status.speaking::before { background: #01579b; }
+        
+        .status.error { background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); color: #c62828; }
+        .status.error::before { background: #c62828; animation: none; }
+        
+        .conversation {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 32px;
+            max-height: 400px;
+            overflow-y: auto;
+            min-height: 250px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+            scroll-behavior: smooth;
+        }
+        
+        .conversation::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .conversation::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        
+        .conversation::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+        }
+        
+        .conversation::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.5);
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            padding: 14px 18px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+            animation: messageSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            line-height: 1.6;
+            font-size: 0.95em;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .message.user {
+            background: var(--primary-gradient);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .message.assistant {
+            background: white;
+            color: var(--text-primary);
+            border-bottom-left-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        
+        .message.system {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+            color: #856404;
+            text-align: center;
+            margin: 12px auto;
+            max-width: 100%;
+            font-size: 0.88em;
+            font-weight: 500;
+            border: 1px solid rgba(133, 100, 4, 0.1);
+        }
+        
+        .mic-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            padding: 32px 0;
+        }
+        
+        .mic-button-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mic-button {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5em;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .mic-button::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            padding: 4px;
+            background: var(--primary-gradient);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .mic-button.inactive {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        }
+        
+        .mic-button.active {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            animation: micPulse 2s ease-in-out infinite;
+        }
+        
+        .mic-button.active::before {
+            opacity: 1;
+            animation: ringPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes micPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 20px 50px rgba(239, 68, 68, 0.5);
+            }
+        }
+        
+        @keyframes ringPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.6; }
+        }
+        
+        .mic-button:hover:not(:disabled) {
+            transform: scale(1.08);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+        }
+        
+        .mic-button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        
+        .mic-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: scale(0.95);
+        }
+        
+        .mic-label {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            letter-spacing: 0.02em;
+        }
+        
+        .mic-label.active {
+            color: #ef4444;
+            transform: scale(1.05);
+        }
+        
+        .wave-indicator {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            height: 50px;
+        }
+        
+        .wave-indicator.active {
+            display: flex;
+        }
+        
+        .wave-bar {
+            width: 5px;
+            background: var(--primary-gradient);
+            border-radius: 3px;
+            animation: wave 1.2s ease-in-out infinite;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .wave-bar:nth-child(1) { animation-delay: 0s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+        .wave-bar:nth-child(6) { animation-delay: 0.5s; }
+        .wave-bar:nth-child(7) { animation-delay: 0.6s; }
+        
+        @keyframes wave {
+            0%, 100% { height: 12px; opacity: 0.5; }
+            50% { height: 40px; opacity: 1; }
+        }
+        
+        .info-text {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95em;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+        
+        .info-text strong {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 32px 24px; border-radius: 24px; }
+            h1 { font-size: 2.2em; }
+            .subtitle { font-size: 1em; }
+            .conversation { max-height: 300px; min-height: 200px; }
+            .mic-button { width: 120px; height: 120px; font-size: 3em; }
+            .logo-container { width: 60px; height: 60px; }
+            .logo-icon { font-size: 30px; }
+        }
+        
+        @media (max-width: 480px) {
+            .container { padding: 24px 20px; }
+            h1 { font-size: 1.8em; }
+            .mic-button { width: 100px; height: 100px; font-size: 2.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-icon">🎙️</div>
+            </div>
+            <h1>Voice AI</h1>
+            <p class="subtitle">Real-time AI-powered conversation</p>
+        </div>
+        <div class="status-container">
+            <div class="status connecting" id="status">Connecting...</div>
+        </div>
+        <div class="conversation" id="conversation">
+            <div class="message system">Initializing voice assistant...</div>
+        </div>
+        <div class="mic-section">
+            <div class="mic-button-wrapper">
+                <button class="mic-button inactive" id="micButton" onclick="toggleMicrophone()" disabled>🎤</button>
+            </div>
+            <div class="mic-label" id="micLabel">Tap to Talk</div>
+            <div class="wave-indicator" id="waveIndicator">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+            </div>
+        </div>
+        <div class="info-text">
+            <strong>Tap the microphone</strong> to start speaking<br>
+            The AI will respond in real-time with natural voice
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
+
