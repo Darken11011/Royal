@@ -36,9 +36,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 10px;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
         
         @keyframes gradientShift {
@@ -82,15 +83,18 @@
             box-shadow: var(--shadow-xl);
             max-width: 900px;
             width: 100%;
-            padding: 48px;
+            padding: 32px;
             position: relative;
             z-index: 1;
             border: 1px solid var(--glass-border);
+            max-height: 95vh;
+            overflow-y: auto;
+            margin: 10px auto;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 24px;
         }
         
         .logo-container {
@@ -194,11 +198,11 @@
         .conversation {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 32px;
-            max-height: 400px;
+            padding: 20px;
+            margin-bottom: 20px;
+            max-height: 300px;
             overflow-y: auto;
-            min-height: 250px;
+            min-height: 180px;
             box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
             scroll-behavior: smooth;
         }
@@ -268,8 +272,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
-            padding: 32px 0;
+            gap: 16px;
+            padding: 20px 0;
         }
         
         .mic-button-wrapper {
@@ -280,8 +284,8 @@
         }
         
         .mic-button {
-            width: 140px;
-            height: 140px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
@@ -289,7 +293,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3.5em;
+            font-size: 2.8em;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
             position: relative;
             z-index: 2;
@@ -403,9 +407,10 @@
         .info-text {
             text-align: center;
             color: var(--text-muted);
-            font-size: 0.95em;
-            line-height: 1.8;
+            font-size: 0.85em;
+            line-height: 1.6;
             font-weight: 500;
+            margin-bottom: 12px;
         }
         
         .info-text strong {
@@ -414,19 +419,26 @@
         }
         
         @media (max-width: 768px) {
-            .container { padding: 32px 24px; border-radius: 24px; }
-            h1 { font-size: 2.2em; }
-            .subtitle { font-size: 1em; }
-            .conversation { max-height: 300px; min-height: 200px; }
-            .mic-button { width: 120px; height: 120px; font-size: 3em; }
-            .logo-container { width: 60px; height: 60px; }
-            .logo-icon { font-size: 30px; }
+            .container { padding: 24px 20px; border-radius: 20px; max-height: 92vh; }
+            h1 { font-size: 2em; }
+            .subtitle { font-size: 0.9em; }
+            .conversation { max-height: 220px; min-height: 150px; padding: 16px; }
+            .mic-button { width: 90px; height: 90px; font-size: 2.5em; }
+            .logo-container { width: 55px; height: 55px; }
+            .logo-icon { font-size: 28px; }
+            .header { margin-bottom: 16px; }
+            .mic-section { padding: 16px 0; gap: 12px; }
         }
-        
+
         @media (max-width: 480px) {
-            .container { padding: 24px 20px; }
-            h1 { font-size: 1.8em; }
-            .mic-button { width: 100px; height: 100px; font-size: 2.5em; }
+            .container { padding: 20px 16px; max-height: 90vh; }
+            h1 { font-size: 1.6em; }
+            .subtitle { font-size: 0.85em; }
+            .mic-button { width: 80px; height: 80px; font-size: 2.2em; }
+            .conversation { max-height: 180px; min-height: 120px; padding: 12px; }
+            .info-text { font-size: 0.8em; }
+            .logo-container { width: 50px; height: 50px; }
+            .logo-icon { font-size: 24px; }
         }
 
         /* Speed Slider Styling */
@@ -511,13 +523,13 @@
         </div>
 
         <!-- Speech Speed Control -->
-        <div style="margin-top: 20px; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 16px; backdrop-filter: blur(10px);">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;">
-                <label for="speedSlider" style="font-weight: 600; color: var(--text-secondary); font-size: 0.95em;">🎚️ Voice Speed:</label>
+        <div style="margin-top: 12px; padding: 16px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; backdrop-filter: blur(10px);">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                <label for="speedSlider" style="font-weight: 600; color: var(--text-secondary); font-size: 0.85em;">🎚️ Speed:</label>
                 <input type="range" id="speedSlider" min="0.5" max="2.0" step="0.1" value="1.0"
                        oninput="updateSpeechRate(this.value)"
-                       style="width: 200px; height: 6px; border-radius: 5px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); outline: none; cursor: pointer;">
-                <span id="speedLabel" style="font-weight: 700; color: var(--accent-color); min-width: 140px; text-align: left; font-size: 0.95em;">Speed: Normal (1.0x)</span>
+                       style="width: 160px; height: 6px; border-radius: 5px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); outline: none; cursor: pointer;">
+                <span id="speedLabel" style="font-weight: 700; color: var(--accent-color); min-width: 120px; text-align: left; font-size: 0.85em;">Normal (1.0x)</span>
             </div>
         </div>
     </div>

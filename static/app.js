@@ -585,7 +585,7 @@ function updateSpeechRate(value) {
         let speedText = 'Normal';
         if (speechRate < 0.8) speedText = 'Slow';
         else if (speechRate > 1.2) speedText = 'Fast';
-        speedLabel.textContent = `Speed: ${speedText} (${speechRate.toFixed(1)}x)`;
+        speedLabel.textContent = `${speedText} (${speechRate.toFixed(1)}x)`;
     }
     console.log('Speech rate updated to:', speechRate);
 }
